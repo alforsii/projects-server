@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const express = require('express');
 const favicon = require('serve-favicon');
 // const hbs          = require('hbs');
-// const mongoose     = require('mongoose');
 const logger = require('morgan');
 const path = require('path');
 const cors = require('cors');
@@ -25,7 +24,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
+require('./configs/passport/export-passport')(app);
 // Express View engine setup
 
 // app.use(require('node-sass-middleware')({
@@ -51,6 +50,7 @@ app.locals.title = 'Express - Generated with IronGenerator';
 
 const index = require('./routes/index');
 app.use('/', index);
+app.use('/api/v1', require('./routes/auth/auth-routes'));
 app.use('/api/v1', require('./routes/posts/posts-routes'));
 app.use('/api/v1', require('./routes/projects/project-routes'));
 
