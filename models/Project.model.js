@@ -2,6 +2,10 @@ const { Schema, model } = require('mongoose');
 
 const projectsSchema = new Schema(
   {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
     name: {
       type: String,
     },
@@ -12,7 +16,7 @@ const projectsSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    imgUrl: {
+    imgPath: {
       type: String,
     },
     imgName: {
@@ -28,9 +32,9 @@ const projectsSchema = new Schema(
       type: String,
     },
     path: {
-      type: String,
+      type: String, // file path - location
     },
-    imageUrl: {
+    imgUrl: {
       type: String,
     },
   },
