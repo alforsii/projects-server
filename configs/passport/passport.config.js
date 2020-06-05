@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const LocalStrategy = require('passport-local').Strategy;
 const bcryptjs = require('bcryptjs');
 const saltRounds = 10;
-const User = require('../../../../module-3/project-module3/server/models/User.model');
+const User = require('../../models/User.model');
 
 //Signup
 passport.use(
@@ -85,14 +85,17 @@ passport.use(
       // in that case the callback would look like: (req, email, password, next)
     },
     (email, password, next) => {
+      // console.log({ email, password });
       User.findOne({ email })
         .then((userFromDB) => {
-          console.log('userFromDB', userFromDB);
+          // console.log('userFromDB', userFromDB);
           if (!userFromDB) {
-            return next(null, false, { message: 'Incorrect email! 🛬' });
+            return next(null, false, { message: 'Incorrect email 📪🙅!' });
           }
           if (!bcryptjs.compareSync(password, userFromDB.password)) {
-            return next(null, false, { message: 'Incorrect password! ❌' });
+            return next(null, false, {
+              message: 'Incorrect password! 🔑',
+            });
           }
           return next(null, userFromDB);
         })

@@ -35,7 +35,7 @@ const routeGuard = require('../../configs/route-guard.configs');
 //signup
 //=-=-=-===-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==
 router.post('/signup', (req, res) => {
-  const { username, firstName, lastName, email, password, title } = req.body;
+  const { firstName, lastName, email, password } = req.body;
 
   if (!firstName || !lastName || !email || !password) {
     res.status(401).json({
@@ -58,11 +58,9 @@ router.post('/signup', (req, res) => {
     .then((isUserExists) => {
       console.log('Output for: isUserExists', isUserExists);
       if (isUserExists) {
-        res
-          .status(403)
-          .json({
-            message: `User with this email address already registered!`,
-          });
+        res.status(403).json({
+          message: `User with this email address already registered!`,
+        });
         return;
       }
 
@@ -71,22 +69,18 @@ router.post('/signup', (req, res) => {
         .then((salt) => bcryptjs.hash(password, salt))
         .then((hashedPassword) => {
           return User.create({
-            username,
             firstName,
             lastName,
             email,
-            title,
             password: hashedPassword,
           })
             .then((user) => {
               req.login(user, (err) => {
                 if (err)
-                  return res
-                    .status(500)
-                    .json({
-                      message:
-                        'Successfully signup, but something went wrong with login! Please go to login and try to login. Sorry for inconvenience!',
-                    });
+                  return res.status(500).json({
+                    message:
+                      'Successfully signup, but something went wrong with login! Please go to login and try to login. Sorry for inconvenience!',
+                  });
                 user.password = undefined;
                 res
                   .status(200)
@@ -109,12 +103,9 @@ router.post('/signup', (req, res) => {
         .catch((err) => console.log(err));
     })
     .catch((err) => {
-      res
-        .status(500)
-        .json({
-          message:
-            'Sorry something went wrong in the server. Please, try later!',
-        });
+      res.status(500).json({
+        message: 'Sorry something went wrong in the server. Please, try later!',
+      });
     });
 });
 
@@ -141,6 +132,7 @@ router.post('/login', (req, res, next) => {
           .status(500)
           .json({ message: 'Sorry, something went wrong with login!' });
       user.password = undefined;
+      console.log('Output for: user', user);
       res.status(200).json({ message: 'Login successful!', user });
     });
   })(req, res, next);
@@ -151,11 +143,9 @@ router.post('/login', (req, res, next) => {
 router.post('/logout', routeGuard, (req, res) => {
   const theUser = req.user;
   req.logout();
-  res
-    .status(200)
-    .json({
-      message: `Logout successful! We gonna miss you ${theUser.firstName}😌! Hope to see you soon, bye!👋`,
-    });
+  res.status(200).json({
+    message: `Logout successful! We gonna miss you ${theUser.firstName}😌! Hope to see you soon, bye!👋`,
+  });
 });
 
 // delete user
